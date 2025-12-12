@@ -74,49 +74,85 @@
                     
                     <!-- Modal Detail -->
                     <div class="modal fade" id="detailModal{{ $b->id }}" tabindex="-1">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Detail Booking</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title"><i class="bi bi-info-circle"></i> Detail Booking #{{ $b->id }}</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div class="modal-body">
-                                    <table class="table table-borderless">
-                                        <tr>
-                                            <th>Ruangan:</th>
-                                            <td>{{ optional($b->room)->name }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Tanggal:</th>
-                                            <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Waktu:</th>
-                                            <td>
-                                                @if($b->start_time && $b->end_time)
-                                                    {{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @if($b->service)
-                                        <tr>
-                                            <th>Layanan:</th>
-                                            <td>{{ $b->service }}</td>
-                                        </tr>
-                                        @endif
-                                        @if($b->notes)
-                                        <tr>
-                                            <th>Catatan:</th>
-                                            <td>{{ $b->notes }}</td>
-                                        </tr>
-                                        @endif
-                                        <tr>
-                                            <th>Total Harga:</th>
-                                            <td><strong>Rp {{ number_format($b->total_price ?? 0, 0, ',', '.') }}</strong></td>
-                                        </tr>
-                                    </table>
+                                <div class="modal-body p-4">
+                                    <div class="mb-3">
+                                        <h6 class="text-muted small mb-1">RUANGAN</h6>
+                                        <p class="mb-0 fw-bold">
+                                            <i class="bi bi-door-open text-primary"></i> 
+                                            {{ $b->room ? $b->room->name : 'Ruangan tidak ditemukan' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="text-muted small mb-1">TANGGAL & WAKTU</h6>
+                                        <p class="mb-1">
+                                            <i class="bi bi-calendar3 text-info"></i> 
+                                            {{ $b->date ? date('d F Y', strtotime($b->date)) : 'Tanggal tidak tersedia' }}
+                                        </p>
+                                        <p class="mb-0">
+                                            <i class="bi bi-clock text-info"></i> 
+                                            @if($b->start_time && $b->end_time)
+                                                {{ date('H:i', strtotime($b->start_time)) }} - {{ date('H:i', strtotime($b->end_time)) }}
+                                            @else
+                                                Waktu tidak tersedia
+                                            @endif
+                                        </p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="text-muted small mb-1">STATUS</h6>
+                                        <div class="d-flex gap-2">
+                                            @if($b->status == 'pending')
+                                                <span class="badge bg-warning"><i class="bi bi-hourglass-split"></i> Pending</span>
+                                            @elseif($b->status == 'confirmed')
+                                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Confirmed</span>
+                                            @elseif($b->status == 'cancelled')
+                                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Cancelled</span>
+                                            @endif
+
+                                            @if($b->payment_status == 'paid')
+                                                <span class="badge bg-success"><i class="bi bi-check2"></i> Lunas</span>
+                                            @else
+                                                <span class="badge bg-danger"><i class="bi bi-x"></i> Belum Bayar</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                    @if($b->service)
+                                    <div class="mb-3">
+                                        <h6 class="text-muted small mb-1">LAYANAN TAMBAHAN</h6>
+                                        <p class="mb-0">
+                                            <i class="bi bi-gear text-success"></i> {{ $b->service }}
+                                        </p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if($b->notes)
+                                    <div class="mb-3">
+                                        <h6 class="text-muted small mb-1">CATATAN</h6>
+                                        <p class="mb-0 fst-italic">
+                                            <i class="bi bi-chat-left-text text-secondary"></i> {{ $b->notes }}
+                                        </p>
+                                    </div>
+                                    @endif
+                                    
+                                    <hr>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 text-muted">TOTAL HARGA</h6>
+                                        <h4 class="mb-0 fw-bold text-primary">Rp {{ number_format($b->total_price ?? 0, 0, ',', '.') }}</h4>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle"></i> Tutup
+                                    </button>
                                 </div>
                             </div>
                         </div>
