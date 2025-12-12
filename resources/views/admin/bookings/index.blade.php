@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <div>
             <h2 class="fw-bold mb-0"><i class="bi bi-calendar-check"></i> Kelola Booking</h2>
-            <p class="text-muted mb-0">Daftar semua booking dari customer</p>
+            <p class="text-muted mb-0">Daftar semua booking dari customer ({{ $bookings->count() }} booking)</p>
         </div>
         <button class="btn btn-primary" onclick="window.print()">
             <i class="bi bi-printer"></i> Print

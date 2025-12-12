@@ -4,15 +4,22 @@
 @section('content')
 <div class="mb-4">
     <h2 class="text-white fw-bold"><i class="bi bi-clock-history"></i> Riwayat Booking Saya</h2>
-    <p class="text-white-50">Lihat semua booking yang pernah Anda buat</p>
+    <p class="text-white-50">Menampilkan semua riwayat booking Anda (Total: {{ $bookings->count() }} booking)</p>
 </div>
 
 <div class="card">
     <div class="card-body">
+        @if($bookings->count() > 0)
+        <div class="alert alert-info mb-3">
+            <i class="bi bi-info-circle"></i> Menampilkan <strong>{{ $bookings->count() }}</strong> booking dari semua status (Pending, Confirmed, Cancelled)
+        </div>
+        @endif
+        
         <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
+                        <th>ID</th>
                         <th><i class="bi bi-door-open"></i> Ruangan</th>
                         <th><i class="bi bi-calendar3"></i> Tanggal</th>
                         <th><i class="bi bi-clock"></i> Waktu</th>
@@ -24,8 +31,9 @@
                 <tbody>
                 @forelse($bookings as $b)
                     <tr>
+                        <td><strong>#{{ $b->id }}</strong></td>
                         <td>
-                            <strong>{{ optional($b->room)->name }}</strong>
+                            <strong>{{ $b->room ? $b->room->name : 'Ruangan tidak ditemukan' }}</strong>
                         </td>
                         <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
                         <td>
@@ -115,9 +123,9 @@
                     </div>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
+                        <td colspan="7" class="text-center py-5">
                             <i class="bi bi-inbox display-1 text-muted"></i>
-                            <p class="mt-3 text-muted">Belum ada booking. <a href="{{ route('user.rooms.index') }}" class="text-decoration-none">Mulai booking sekarang!</a></p>
+                            <p class="mt-3 text-muted">Belum ada riwayat booking. <a href="{{ route('user.rooms.index') }}" class="text-decoration-none">Mulai booking sekarang!</a></p>
                         </td>
                     </tr>
                 @endforelse

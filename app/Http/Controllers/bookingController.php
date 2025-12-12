@@ -42,10 +42,11 @@ class bookingController extends Controller
 
     public function history()
     {
-        $bookings = Booking::with('room')
+        $bookings = Booking::with('room', 'user')
             ->where('user_id', auth()->id())
-            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
+        
         return view('user.booking.history', compact('bookings'));
     }
 
