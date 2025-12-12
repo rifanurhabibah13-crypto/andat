@@ -100,7 +100,7 @@
                     </div>
                     <div class="col-md-4">
                         <i class="bi bi-person-check text-info display-6"></i>
-                        <h5 class="mt-2 mb-0">{{ $user->created_at->diffForHumans() }}</h5>
+                        <h5 class="mt-2 mb-0">{{ $user->created_at ? $user->created_at->diffForHumans() : '-' }}</h5>
                         <small class="text-muted">Member Sejak</small>
                     </div>
                 </div>

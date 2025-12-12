@@ -27,17 +27,19 @@ class usersController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:30',
-            'password' => 'nullable|string|min:6|confirmed',
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user->name = $data['name'];
-        $user->phone = $data['phone'] ?? $user->phone;
+        if (isset($data['phone'])) {
+            $user->phone = $data['phone'];
+        }
         if (!empty($data['password'])) {
             $user->password = bcrypt($data['password']);
         }
         $user->save();
 
-        return redirect()->route('user.profile')->with('success', 'Profile updated.');
+        return redirect()->route('user.profile')->with('success', 'Profil berhasil diperbarui!');
     }
 
     // Admin edit user
