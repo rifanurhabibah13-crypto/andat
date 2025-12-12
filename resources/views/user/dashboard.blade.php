@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="mb-4">
-    <h2 class="text-white fw-bold">Selamat Datang, {{ auth()->user()->name }}! 👋</h2>
+    <h2 class="text-white fw-bold">Selamat Datang, {{ auth()->user()->name }}!</h2>
     <p class="text-white-50">Kelola booking dan profil Anda di sini</p>
 </div>
 

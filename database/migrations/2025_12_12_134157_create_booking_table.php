@@ -16,10 +16,13 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
             $table->date('date');
-            $table->dateTime('start_time');
-            $table->dateTime('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->string('service')->nullable();
+            $table->text('notes')->nullable();
             $table->integer('total_price')->default(0); 
-            $table->string('status')->default('pending');        
+            $table->string('status')->default('pending');
+            $table->string('payment_status')->default('unpaid');
             $table->timestamps();
         });
     }

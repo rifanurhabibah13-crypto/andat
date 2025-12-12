@@ -67,6 +67,13 @@
                                 <h3 class="fw-bold mb-2">Selamat Datang!</h3>
                                 <p class="text-muted mb-4">Silakan login untuk melanjutkan</p>
                                 
+                                @if(session('success'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                @endif
+                                
                                 @if($errors->any())
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <i class="bi bi-exclamation-triangle-fill"></i> {{ $errors->first() }}

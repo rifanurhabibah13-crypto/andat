@@ -53,8 +53,7 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
 
-        Auth::login($user);
-        return redirect()->route('user.dashboard');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     public function logout(Request $request)

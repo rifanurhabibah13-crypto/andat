@@ -9,6 +9,8 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $table = 'booking';
+
     protected $fillable = [
         'user_id',
         'room_id',
@@ -37,6 +39,3 @@ class Booking extends Model
         return $this->hasMany(Transaction::class);
     }
 }
-<?php
-
-namespace App\Models;
