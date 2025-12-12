@@ -38,5 +38,5 @@ class Booking extends Model
     }
 }
 <?php
-namespace App\Models;
 
+namespace App\Models;

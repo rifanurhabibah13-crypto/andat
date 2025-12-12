@@ -2,23 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Transaction extends Model
-{
-    use HasFactory;
-
-    protected $fillable = [
-        'booking_id',
-        'amount',
-        'payment_method',
-        'status',
-    ];
-
-    public function booking()
-    {
-        return $this->belongsTo(Booking::class);
-    }
-}
+// Backwards-compatible alias for legacy lowercase file
+class transaction extends Transaction {}
 
