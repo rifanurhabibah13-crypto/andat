@@ -10,7 +10,7 @@ class usersController extends Controller
     // Admin: list users
     public function index()
     {
-        $users = User::paginate(20);
+        $users = User::with('bookings')->paginate(20);
         return view('admin.users.index', compact('users'));
     }
 

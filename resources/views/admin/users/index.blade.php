@@ -49,7 +49,7 @@
                                 <span class="badge bg-primary"><i class="bi bi-person"></i> User</span>
                             @endif
                         </td>
-                        <td>{{ $u->created_at->format('d M Y') }}</td>
+                        <td>{{ $u->created_at ? $u->created_at->format('d M Y') : '-' }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $u->id }}">
@@ -90,11 +90,11 @@
                                         </tr>
                                         <tr>
                                             <th>Bergabung:</th>
-                                            <td>{{ $u->created_at->format('d M Y H:i') }}</td>
+                                            <td>{{ $u->created_at ? $u->created_at->format('d M Y H:i') : '-' }}</td>
                                         </tr>
                                         <tr>
                                             <th>Total Booking:</th>
-                                            <td><strong>{{ $u->bookings->count() }}</strong></td>
+                                            <td><strong>{{ $u->bookings ? $u->bookings->count() : 0 }}</strong></td>
                                         </tr>
                                     </table>
                                 </div>

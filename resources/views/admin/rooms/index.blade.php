@@ -24,9 +24,13 @@
                         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $room->id }}">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-outline-danger" onclick="return confirm('Yakin hapus ruangan ini?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <form action="{{ route('admin.rooms.destroy', $room->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus ruangan ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <p class="text-muted small">{{ Str::limit($room->description, 80) ?? 'Tidak ada deskripsi' }}</p>
@@ -65,37 +69,80 @@
 <div class="modal fade" id="createModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Tambah Ruangan Baru</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
+            <form action="{{ route('admin.rooms.store') }}" method="POST">
+                @csrf
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Tambah Ruangan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nama Ruangan</label>
-                        <input type="text" class="form-control" placeholder="Contoh: Studio A" required>
+                        <input type="text" name="name" class="form-control" placeholder="Contoh: Studio A" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Deskripsi</label>
-                        <textarea class="form-control" rows="3" placeholder="Deskripsi ruangan..."></textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Deskripsi ruangan..."></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Kapasitas</label>
-                            <input type="number" class="form-control" placeholder="10" required>
+                            <input type="number" name="capacity" class="form-control" placeholder="10" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Harga/Jam</label>
-                            <input type="number" class="form-control" placeholder="100000" required>
+                            <input type="number" name="price_per_hour" class="form-control" placeholder="100000" required>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- Edit Modals -->
+@foreach($rooms ?? [] as $room)
+<div class="modal fade" id="editModal{{ $room->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.rooms.update', $room->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-pencil"></i> Edit Ruangan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Ruangan</label>
+                        <input type="text" name="name" class="form-control" value="{{ $room->name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Deskripsi</label>
+                        <textarea name="description" class="form-control" rows="3">{{ $room->description }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Kapasitas</label>
+                            <input type="number" name="capacity" class="form-control" value="{{ $room->capacity }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Harga/Jam</label>
+                            <input type="number" name="price_per_hour" class="form-control" value="{{ $room->price_per_hour }}" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning"><i class="bi bi-save"></i> Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection

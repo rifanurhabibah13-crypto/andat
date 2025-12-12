@@ -24,12 +24,16 @@
                         <i class="bi bi-gear fs-4 text-primary"></i>
                     </div>
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary">
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $s->id }}">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-outline-danger" onclick="return confirm('Yakin hapus layanan ini?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <form action="{{ route('admin.services.destroy', $s->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus layanan ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <h5 class="fw-bold mb-2">{{ $s->name }}</h5>
@@ -61,31 +65,68 @@
 <div class="modal fade" id="createModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Tambah Layanan Baru</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
+            <form action="{{ route('admin.services.store') }}" method="POST">
+                @csrf
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="bi bi-plus-circle"></i> Tambah Layanan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nama Layanan</label>
-                        <input type="text" class="form-control" placeholder="Contoh: Sound Engineer" required>
+                        <input type="text" name="name" class="form-control" placeholder="Contoh: Sound Engineer" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Deskripsi</label>
-                        <textarea class="form-control" rows="3" placeholder="Deskripsi layanan..."></textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Deskripsi layanan..."></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Harga</label>
-                        <input type="number" class="form-control" placeholder="50000" required>
+                        <input type="number" name="price" class="form-control" placeholder="50000" required>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- Edit Modals -->
+@foreach($services ?? [] as $service)
+<div class="modal fade" id="editModal{{ $service->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('admin.services.update', $service->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="bi bi-pencil"></i> Edit Layanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Layanan</label>
+                        <input type="text" name="name" class="form-control" value="{{ $service->name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Deskripsi</label>
+                        <textarea name="description" class="form-control" rows="3">{{ $service->description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Harga</label>
+                        <input type="number" name="price" class="form-control" value="{{ $service->price }}" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning"><i class="bi bi-save"></i> Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
 @endsection
