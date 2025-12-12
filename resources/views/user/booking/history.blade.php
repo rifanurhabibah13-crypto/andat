@@ -27,10 +27,14 @@
                         <td>
                             <strong>{{ optional($b->room)->name }}</strong>
                         </td>
-                        <td>{{ date('d M Y', strtotime($b->date)) }}</td>
+                        <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
                         <td>
                             <small class="text-muted">
-                                {{ date('H:i', strtotime($b->start_time)) }} - {{ date('H:i', strtotime($b->end_time)) }}
+                                @if($b->start_time && $b->end_time)
+                                    {{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}
+                                @else
+                                    -
+                                @endif
                             </small>
                         </td>
                         <td>
@@ -76,11 +80,17 @@
                                         </tr>
                                         <tr>
                                             <th>Tanggal:</th>
-                                            <td>{{ date('d M Y', strtotime($b->date)) }}</td>
+                                            <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
                                         </tr>
                                         <tr>
                                             <th>Waktu:</th>
-                                            <td>{{ $b->start_time }} - {{ $b->end_time }}</td>
+                                            <td>
+                                                @if($b->start_time && $b->end_time)
+                                                    {{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                         </tr>
                                         @if($b->service)
                                         <tr>

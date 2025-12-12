@@ -24,24 +24,51 @@ class bookingController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // Calculate duration and total price
+        $room = Room::findOrFail($data['room_id']);
+        $start = strtotime($data['start_time']);
+        $end = strtotime($data['end_time']);
+        $hours = ($end - $start) / 3600;
+        
         $data['user_id'] = auth()->id();
         $data['status'] = 'pending';
         $data['payment_status'] = 'unpaid';
+        $data['total_price'] = $room->price_per_hour * $hours;
+        
         $booking = Booking::create($data);
 
-        return redirect()->route('user.booking.history');
+        return redirect()->route('user.booking.history')->with('success', 'Booking berhasil dibuat!');
     }
 
     public function history()
     {
-        $bookings = Booking::where('user_id', auth()->id())->get();
+        $bookings = Booking::with('room')
+            ->where('user_id', auth()->id())
+            ->orderBy('date', 'desc')
+            ->get();
         return view('user.booking.history', compact('bookings'));
     }
 
     // Admin listing
     public function index()
     {
-        $bookings = Booking::with('user','room')->get();
+        $bookings = Booking::with('user','room')
+            ->orderBy('date', 'desc')
+            ->get();
         return view('admin.bookings.index', compact('bookings'));
+    }
+    
+    // Admin update status
+    public function updateStatus(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        
+        $data = $request->validate([
+            'status' => 'required|in:pending,confirmed,cancelled',
+            'payment_status' => 'required|in:paid,unpaid',
+        ]);
+        
+        $booking->update($data);
+        return redirect()->route('admin.bookings.index')->with('success', 'Status booking berhasil diupdate!');
     }
 }

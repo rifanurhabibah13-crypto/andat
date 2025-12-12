@@ -26,9 +26,27 @@
 
                 <form method="POST" action="{{ route('user.booking.store') }}">
                     @csrf
-                    <input type="hidden" name="room_id" value="{{ $room ? $room->id : '' }}">
                     
                     <div class="row g-3">
+                        @if(!$room)
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold"><i class="bi bi-door-open"></i> Pilih Ruangan</label>
+                            <select name="room_id" class="form-select form-select-lg @error('room_id') is-invalid @enderror" required>
+                                <option value="">-- Pilih Ruangan --</option>
+                                @foreach(\App\Models\Room::all() as $r)
+                                    <option value="{{ $r->id }}" {{ old('room_id') == $r->id ? 'selected' : '' }}>
+                                        {{ $r->name }} - Rp {{ number_format($r->price_per_hour, 0, ',', '.') }}/jam
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('room_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        @else
+                        <input type="hidden" name="room_id" value="{{ $room->id }}">
+                        @endif
+                        
                         <div class="col-md-12">
                             <label class="form-label fw-bold"><i class="bi bi-calendar3"></i> Tanggal</label>
                             <input type="date" name="date" class="form-control form-control-lg @error('date') is-invalid @enderror" 

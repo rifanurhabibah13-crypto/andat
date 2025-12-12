@@ -49,10 +49,14 @@
                             <strong>{{ optional($b->room)->name }}</strong>
                             <br><small class="text-muted">{{ optional($b->room)->capacity }} orang</small>
                         </td>
-                        <td>{{ date('d M Y', strtotime($b->date)) }}</td>
+                        <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
                         <td>
                             <small>
-                                {{ date('H:i', strtotime($b->start_time)) }} - {{ date('H:i', strtotime($b->end_time)) }}
+                                @if($b->start_time && $b->end_time)
+                                    {{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}
+                                @else
+                                    -
+                                @endif
                             </small>
                         </td>
                         <td>
@@ -78,7 +82,7 @@
                                 <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $b->id }}">
                                     <i class="bi bi-eye"></i>
                                 </button>
-                                <button class="btn btn-outline-primary">
+                                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $b->id }}">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                             </div>
@@ -117,11 +121,17 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Tanggal:</th>
-                                                    <td>{{ date('d M Y', strtotime($b->date)) }}</td>
+                                                    <td>{{ $b->date ? date('d M Y', strtotime($b->date)) : '-' }}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Waktu:</th>
-                                                    <td>{{ $b->start_time }} - {{ $b->end_time }}</td>
+                                                    <td>
+                                                        @if($b->start_time && $b->end_time)
+                                                            {{ substr($b->start_time, 0, 5) }} - {{ substr($b->end_time, 0, 5) }}
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -142,6 +152,42 @@
                                         <h4 class="mb-0 text-primary fw-bold">Rp {{ number_format($b->total_price ?? 0, 0, ',', '.') }}</h4>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Edit Status -->
+                    <div class="modal fade" id="editModal{{ $b->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="{{ route('admin.bookings.updateStatus', $b->id) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header bg-warning text-dark">
+                                        <h5 class="modal-title"><i class="bi bi-pencil"></i> Update Status Booking #{{ $b->id }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Status Booking</label>
+                                            <select name="status" class="form-select" required>
+                                                <option value="pending" {{ $b->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                                <option value="confirmed" {{ $b->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                                <option value="cancelled" {{ $b->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Status Pembayaran</label>
+                                            <select name="payment_status" class="form-select" required>
+                                                <option value="unpaid" {{ $b->payment_status == 'unpaid' ? 'selected' : '' }}>Belum Bayar</option>
+                                                <option value="paid" {{ $b->payment_status == 'paid' ? 'selected' : '' }}>Lunas</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-warning"><i class="bi bi-save"></i> Update</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

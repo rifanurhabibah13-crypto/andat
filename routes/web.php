@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('rooms', roomsController::class);
         Route::resource('services', servicesController::class);
         Route::get('bookings', [bookingController::class, 'index'])->name('bookings.index');
+        Route::post('bookings/{booking}/update-status', [bookingController::class, 'updateStatus'])->name('bookings.updateStatus');
         Route::get('transactions', [transactionController::class, 'index'])->name('transactions.index');
         Route::resource('users', usersController::class)->only(['index','edit','update','destroy']);
     });
